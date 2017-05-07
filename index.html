@@ -18,6 +18,18 @@
   </ul>
 </div>
 
+<div id="app-5">
+  <h1>Event Listener</h1>
+  <p>what i get: {{ message }}</p>
+  <button v-on:click="changeMes">Click to become lol</button>
+</div>
+
+<div id="app-6">
+  <h1>Input Model</h1>
+  <p>result: {{ result }}</p>
+  <input type="text" name="result" v-model="result">
+</div>
+
 <script>
   var changeDOM = new Vue({
     el: '#app',
@@ -58,4 +70,23 @@
     }
   })
   list.fruits.push('pineapple')
+
+  var buttonevent = new Vue({
+    el: '#app-5',
+    data: {
+      message: 'Original'
+    },
+    methods: {
+      changeMes: () => (buttonevent.message = 'lol')
+    }
+  })
+  //virtual dom concept
+
+  var change = new Vue({
+    el: '#app-6',
+    data: {
+      result: 'Hello world'
+    }
+  })
+
 </script>
