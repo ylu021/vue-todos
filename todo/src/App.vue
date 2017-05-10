@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <header-a msgtochild="I am your father"></header-a>
     <h1 v-text="title"></h1>
     <input v-model="newItem" @keyup.enter="addNew">
     <ul v-for="item in list">
@@ -8,14 +9,18 @@
       </li>
     </ul>
     <!-- <router-view></router-view> -->
+    <footer-a></footer-a>
   </div>
 </template>
 
 <script>
+import HeaderA from './headerA'
+import FooterA from './footerA'
 import Store from './store' // getting default exported methods
 
 export default {
   name: 'app',
+  components: { HeaderA, FooterA },
   data: () => {
     return {
       title: 'this is a todo list',
