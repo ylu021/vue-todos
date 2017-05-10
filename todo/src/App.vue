@@ -1,10 +1,13 @@
 <template>
   <div id="app">
     <h1 v-text="title"></h1>
+    <input v-model="newItem" @keyup.enter="addNew">
     <ul v-for="item in list">
-      <li :class="{ finished: item.isFinished }">{{ item.label }}</li>
+      <li :class="{ finished: item.isFinished }" @click="toggleFinish(item)">
+        {{ item.label }}
+      </li>
     </ul>
-    <router-view></router-view>
+    <!-- <router-view></router-view> -->
   </div>
 </template>
 
@@ -15,19 +18,30 @@ export default {
     return {
       title: 'this is a todo list',
       list: [
-        {
-          label: 'eating',
-          isFinished: true
-        },
-        {
-          label: 'studying',
-          isFinished: false
-        },
-        {
-          label: 'practicing nodejs',
-          isFinished: false
-        }
-      ]
+        // {
+        //   label: 'eating',
+        //   isFinished: true
+        // },
+        // {
+        //   label: 'studying',
+        //   isFinished: false
+        // },
+        // {
+        //   label: 'practicing nodejs',
+        //   isFinished: false
+        // }
+      ],
+      newItem: ''
+    }
+  },
+  methods: {
+    toggleFinish: (item) => {
+      item.isFinished = !item.isFinished
+    },
+    addNew: function () {
+      console.log('enter pressed', this.newItem)
+      this.list.push({ label: this.newItem, isFinished: false })
+      this.newItem = ''
     }
   }
 }
@@ -35,7 +49,8 @@ export default {
 
 <style>
 .finished {
-  text-decoration: underline;
+  text-decoration: line-through;
+
 }
 
 #app {
