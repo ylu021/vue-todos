@@ -12,25 +12,14 @@
 </template>
 
 <script>
+import Store from './store' // getting default exported methods
+
 export default {
   name: 'app',
   data: () => {
     return {
       title: 'this is a todo list',
-      list: [
-        // {
-        //   label: 'eating',
-        //   isFinished: true
-        // },
-        // {
-        //   label: 'studying',
-        //   isFinished: false
-        // },
-        // {
-        //   label: 'practicing nodejs',
-        //   isFinished: false
-        // }
-      ],
+      list: Store.fetch(),
       newItem: ''
     }
   },
@@ -39,9 +28,20 @@ export default {
       item.isFinished = !item.isFinished
     },
     addNew: function () {
-      console.log('enter pressed', this.newItem)
-      this.list.push({ label: this.newItem, isFinished: false })
+      this.list.push({
+        label: this.newItem,
+        isFinished: false
+      })
       this.newItem = ''
+      Store.save(this.list)
+    }
+  },
+  watch: { // value change
+    list: {
+      handler: function (val, oldVal) {
+        Store.save(this.list)
+      },
+      deep: true // remembers inner attribute
     }
   }
 }
