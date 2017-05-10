@@ -1,7 +1,10 @@
 <template>
   <div id="app">
-    <header-a msgtochild="I am your father"></header-a>
+    <header-a msgtochild="I am your father" @getChildMsg="jotDownRequest"></header-a>
     <h1 v-text="title"></h1>
+    <p v-if="childWords">
+      Tell me: {{ childWords }}
+    </p>
     <input v-model="newItem" @keyup.enter="addNew">
     <ul v-for="item in list">
       <li :class="{ finished: item.isFinished }" @click="toggleFinish(item)">
@@ -9,7 +12,7 @@
       </li>
     </ul>
     <!-- <router-view></router-view> -->
-    <footer-a></footer-a>
+    <!-- <footer-a></footer-a> -->
   </div>
 </template>
 
@@ -25,7 +28,8 @@ export default {
     return {
       title: 'this is a todo list',
       list: Store.fetch(),
-      newItem: ''
+      newItem: '',
+      childWords: ''
     }
   },
   methods: {
@@ -39,6 +43,9 @@ export default {
       })
       this.newItem = ''
       Store.save(this.list)
+    },
+    jotDownRequest: function (msg) {
+      this.childWords = msg
     }
   },
   watch: { // value change

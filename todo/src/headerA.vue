@@ -16,6 +16,7 @@
     methods: {
       onClickme: function () {
         console.log('message from header tag', this.msgtochild)
+        this.$emit('getChildMsg', this.msg) // like socket.io
       }
     }
   }
