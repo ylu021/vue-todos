@@ -9,13 +9,14 @@
       </div>
       <li class="list-item" v-for="(item, index) in list">
         <span :class="[{ finished: item.isFinished }]" @click="toggleFinish(item)">{{ item.label }}</span>
-        <span class="duedate-hint" v-if="!item.dueDate" @click="loadDateField(item)">Add a due date</span>
+        <span class="hint" v-if="!item.dueDate" @click="loadDateField(item)">Add a due date</span>
         <input v-if="item.dueDate==='input'" v-model="newDueDate" @keyup.enter="addDue(item)" type="date">
         <span v-if="item.dueDate && item.dueDate!=='input'" >Due in {{ item.daysLeft }} days </span>
-        <!-- <button @click="deleteForever(item)">X</button> -->
-        <button class="delete-btn" v-on:click="list.splice(index, 1)">X</button>
+        <button class="btn delete-btn" v-on:click="list.splice(index, 1)">X</button>
       </li>
     </ul>
+    <br>
+    <button class="btn reset-btn" v-on:click="resetList">Clear Todos</button>
     <!-- <router-view></router-view> -->
   </div>
 </template>
@@ -85,6 +86,9 @@ export default {
       } else {
         this.progress = Math.floor(this.list.filter((item) => (item.isFinished)).length / this.list.length * 100)
       }
+    },
+    resetList () {
+      this.list = []
     }
   },
   watch: { // value change
@@ -101,8 +105,13 @@ export default {
 </script>
 
 <style>
-.duedate-hint {
+
+.hint {
   color: #41b883;
+}
+
+.hint:hover {
+  cursor: pointer;
 }
 
 .finished {
@@ -138,21 +147,43 @@ export default {
   width: 100%;
   padding: 0.5em;
   border-bottom: solid 1px #eee;
+  align-items: center;
 }
 
 .list-item > span {
-  width: 80%;
   text-align: left;
   margin-left: 1em;
+  width: 80%;
 }
 
 .archive {
   visibility: hidden;
 }
 
-.delete-btn {
-    /*display: block;*/
+.btn {
   border-radius: 5px;
+  font-size: medium;
+}
+
+.btn:hover {
+  cursor: pointer;
+}
+
+.reset-btn {
+  padding: 1em;
+  height: auto;
+  color: white;
+  background: #2C3E50;
+  border: 2px solid #2C3E50;
+}
+
+.reset-btn:hover {
+  background: white;
+  color: #2C3E50;
+}
+
+.delete-btn {
+  margin-left: 20px;
   width: 50px;
   padding: 3px 0;
   height: auto;
@@ -165,7 +196,6 @@ export default {
 .delete-btn:hover {
   color: white;
   background: #E91E63;
-  cursor: pointer;
 }
 
 #app {
