@@ -12,7 +12,7 @@
         <span :class="[{ finished: item.isFinished }]" @click="toggleFinish(item)">{{ item.label }}</span>
         <span class="duedate-hint" v-if="!item.dueDate" @click="loadDateField(item)">Add a due date</span>
         <input v-if="item.dueDate==='input'" v-model="newDueDate" @keyup.enter="addDue(item)" type="date">
-        <span v-if="item.dueDate!=='input'" >{{ item.dueDate }}</span>
+        <span v-if="item.dueDate && item.dueDate!=='input'" >Due in {{ item.daysLeft }} days </span>
         <!-- <button @click="deleteForever(item)">X</button> -->
       </li>
     </ul>
@@ -22,6 +22,7 @@
 
 <script>
 import Store from './store' // getting default exported methods
+import moment from 'moment'
 
 const STORAGE_KEY = 'todo'
 
@@ -40,11 +41,21 @@ export default {
   },
   created: function () {
     this.updateProgress()
+    this.updateCurrentDate()
   },
   methods: {
     isEmpty () {
       console.log(this.list.length)
       return this.list.length === 0
+    },
+    updateCurrentDate () {
+      this.list = this.list.map((item) => {
+        if (item.dueDate) {
+          console.log('what', item.dueDate)
+          item.daysLeft = moment(item.dueDate).diff(moment().now, 'days') // 1
+        }
+        return item
+      })
     },
     toggleFinish (item) {
       item.isFinished = !item.isFinished
@@ -57,13 +68,16 @@ export default {
       this.list.push({
         label: this.newItem,
         isFinished: false,
-        dueDate: ''
+        dueDate: '',
+        daysLeft: ''
       })
       this.newItem = ''
       Store.save(this.list)
     },
     addDue (item) {
       item.dueDate = this.newDueDate
+      item.daysLeft = moment(this.dueDate).diff(moment().now, 'days') // 1
+      console.log(item.daysLeft, this.newDueDate)
     },
     updateProgress () {
       if (this.list.length === 0) {
@@ -78,6 +92,7 @@ export default {
       handler: function (val, oldVal) {
         Store.save(STORAGE_KEY, this.list)
         this.updateProgress()
+        this.updateCurrentDate()
         console.log('i detect the change')
       },
       deep: true // remembers inner attribute
