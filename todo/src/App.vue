@@ -21,6 +21,9 @@
     <br>
     <button class="btn reset-btn" v-on:click="resetList">Clear Todos</button>
     <!-- <router-view></router-view> -->
+    <footer>
+      <span>LYCworks&copy;2016</span>
+    </footer>
   </div>
 </template>
 
@@ -214,7 +217,6 @@ export default {
 .delete-btn {
   margin-left: 20px;
   width: 50px;
-  padding: 3px 0;
   height: auto;
   border: 2px solid #E91E63;
   background: white;
@@ -225,6 +227,13 @@ export default {
 .delete-btn:hover {
   color: white;
   background: #E91E63;
+}
+
+footer {
+  position: absolute;
+  bottom: 20px;
+  left: 45%;
+  padding: 0;
 }
 
 #app {
