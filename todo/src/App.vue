@@ -8,10 +8,13 @@
         <input v-model="newItem" @keyup.enter="addNew" placeholder="what are you up to">
       </div>
       <li class="list-item" v-for="(item, index) in list">
-        <span :class="[{ finished: item.isFinished }]" @click="toggleFinish(item)">{{ item.label }}</span>
-        <span class="hint" v-if="!item.dueDate" @click="loadDateField(item)">Add a due date</span>
-        <input v-if="item.dueDate==='input'" v-model="newDueDate" @keyup.enter="addDue(item)" type="date">
-        <span v-if="item.dueDate && item.dueDate!=='input'" >Due in {{ item.daysLeft }} days </span>
+        <span :class="[{ finished: item.isFinished }, 'item-text']" @click="toggleFinish(item)">{{ item.label }}</span>
+        <div class="item-due">
+          <span class="hint" v-if="!item.dueDate" @click="loadDateField(item)">Add a due date</span>
+          <input class="date-input" v-if="item.dueDate==='input'" v-model="newDueDate" @keyup.enter="addDue(item)" type="date">
+          <span v-if="item.dueDate && item.dueDate!=='input'" >Due in {{ item.daysLeft }} days  </span>
+          <span v-if="item.dueDate && item.dueDate!=='input'" class="hint hint-edit" @click="editDue(item)">edit due date</span>
+        </div>
         <button class="btn delete-btn" v-on:click="list.splice(index, 1)">X</button>
       </li>
     </ul>
@@ -80,6 +83,9 @@ export default {
       item.daysLeft = moment(this.newDueDate, 'YYYY-MM-DD').diff(moment().now, 'days') // 1
       // console.log('add', moment(this.dueDate, 'YYYY-MM-DD').diff(moment().now, 'days'))
     },
+    editDue (item) {
+      item.dueDate = 'input'
+    },
     updateProgress () {
       if (this.list.length === 0) {
         this.progress = 0
@@ -142,6 +148,14 @@ export default {
   font-size: medium;
 }
 
+.date-input {
+  width: 100%;
+  border: none;
+  font-size: medium;
+  font-family: inherit;
+  color: inherit;
+}
+
 .list-item {
   display: flex;
   width: 100%;
@@ -153,7 +167,22 @@ export default {
 .list-item > span {
   text-align: left;
   margin-left: 1em;
+}
+
+.item-text {
   width: 80%;
+}
+
+.item-due {
+  width: 50%;
+  text-align: left;
+  display: flex;
+  width: 50%;
+  justify-content: space-between;
+}
+
+.hint-edit {
+  margin-left: 5px;
 }
 
 .archive {
