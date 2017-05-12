@@ -4,10 +4,15 @@
     <p v-if="isEmpty">No tasks free woohoo~</p>
     <p v-if="!isEmpty">Currently finished <span class="progress">{{ progress + '%'}}</span> </p>
     <ul class="list" >
-      <div class="list-input"><input v-model="newItem" @keyup.enter="addNew" placeholder="what are you up to"></div>
+      <div class="list-input">
+        <input v-model="newItem" @keyup.enter="addNew" placeholder="what are you up to">
+      </div>
       <li class="list-item" v-for="(item, index) in list">
         <button v-on:click="list.splice(index, 1)">X</button>
         <span :class="[{ finished: item.isFinished }]" @click="toggleFinish(item)">{{ item.label }}</span>
+        <span class="duedate-hint" v-if="!item.dueDate" @click="loadDateField(item)">Add a due date</span>
+        <input v-if="item.dueDate==='input'" v-model="newDueDate" @keyup.enter="addDue(item)" type="date">
+        <span v-if="item.dueDate!=='input'" >{{ item.dueDate }}</span>
         <!-- <button @click="deleteForever(item)">X</button> -->
       </li>
     </ul>
@@ -27,8 +32,10 @@ export default {
       title: 'TODO',
       list: Store.fetch(STORAGE_KEY) || [],
       newItem: '',
+      newDueDate: '',
       progress: 0,
-      isEmpty: false
+      isEmpty: false,
+      showDateField: false
     }
   },
   created: function () {
@@ -42,13 +49,21 @@ export default {
     toggleFinish (item) {
       item.isFinished = !item.isFinished
     },
+    loadDateField (item) {
+      console.log('at leaast im here')
+      item.dueDate = 'input'
+    },
     addNew () {
       this.list.push({
         label: this.newItem,
-        isFinished: false
+        isFinished: false,
+        dueDate: ''
       })
       this.newItem = ''
       Store.save(this.list)
+    },
+    addDue (item) {
+      item.dueDate = this.newDueDate
     },
     updateProgress () {
       if (this.list.length === 0) {
@@ -63,6 +78,7 @@ export default {
       handler: function (val, oldVal) {
         Store.save(STORAGE_KEY, this.list)
         this.updateProgress()
+        console.log('i detect the change')
       },
       deep: true // remembers inner attribute
     }
@@ -71,6 +87,10 @@ export default {
 </script>
 
 <style>
+.duedate-hint {
+  color: #41b883;
+}
+
 .finished {
   text-decoration: line-through;
 }
@@ -84,7 +104,7 @@ export default {
   list-style: none;
   padding: 0;
   margin: 0 auto;
-  width: 30%;
+  width: 50%;
 }
 
 .list-input {
