@@ -1,7 +1,7 @@
-const STORAGE_KEY = 'todo'
+// const STORAGE_KEY = 'todo'
 export default {
-  fetch: () => {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY))
+  fetch: (key) => {
+    return JSON.parse(localStorage.getItem(key))
   },
-  save: (list) => (localStorage.setItem(STORAGE_KEY, JSON.stringify(list)))
+  save: (key, list) => (localStorage.setItem(key, JSON.stringify(list)))
 }
