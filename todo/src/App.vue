@@ -52,7 +52,7 @@ export default {
       this.list = this.list.map((item) => {
         if (item.dueDate) {
           console.log('what', item.dueDate)
-          item.daysLeft = moment(item.dueDate).diff(moment().now, 'days') // 1
+          item.daysLeft = moment(item.dueDate, 'YYYY-MM-DD').diff(moment().now, 'days') // 1
         }
         return item
       })
@@ -76,8 +76,8 @@ export default {
     },
     addDue (item) {
       item.dueDate = this.newDueDate
-      item.daysLeft = moment(this.dueDate).diff(moment().now, 'days') // 1
-      console.log(item.daysLeft, this.newDueDate)
+      item.daysLeft = moment(this.newDueDate, 'YYYY-MM-DD').diff(moment().now, 'days') // 1
+      // console.log('add', moment(this.dueDate, 'YYYY-MM-DD').diff(moment().now, 'days'))
     },
     updateProgress () {
       if (this.list.length === 0) {
@@ -92,7 +92,6 @@ export default {
       handler: function (val, oldVal) {
         Store.save(STORAGE_KEY, this.list)
         this.updateProgress()
-        this.updateCurrentDate()
         console.log('i detect the change')
       },
       deep: true // remembers inner attribute
