@@ -8,12 +8,12 @@
         <input v-model="newItem" @keyup.enter="addNew" placeholder="what are you up to">
       </div>
       <li class="list-item" v-for="(item, index) in list">
-        <button v-on:click="list.splice(index, 1)">X</button>
         <span :class="[{ finished: item.isFinished }]" @click="toggleFinish(item)">{{ item.label }}</span>
         <span class="duedate-hint" v-if="!item.dueDate" @click="loadDateField(item)">Add a due date</span>
         <input v-if="item.dueDate==='input'" v-model="newDueDate" @keyup.enter="addDue(item)" type="date">
         <span v-if="item.dueDate && item.dueDate!=='input'" >Due in {{ item.daysLeft }} days </span>
         <!-- <button @click="deleteForever(item)">X</button> -->
+        <button class="delete-btn" v-on:click="list.splice(index, 1)">X</button>
       </li>
     </ul>
     <!-- <router-view></router-view> -->
@@ -148,6 +148,24 @@ export default {
 
 .archive {
   visibility: hidden;
+}
+
+.delete-btn {
+    /*display: block;*/
+  border-radius: 5px;
+  width: 50px;
+  padding: 3px 0;
+  height: auto;
+  border: 2px solid #E91E63;
+  background: white;
+  color: #E91E63;
+  font-weight: 800;
+}
+
+.delete-btn:hover {
+  color: white;
+  background: #E91E63;
+  cursor: pointer;
 }
 
 #app {
